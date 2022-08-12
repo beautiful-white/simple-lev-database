@@ -30,18 +30,18 @@ class Base(object):
 
     def load(self, name=""):
         if not name: return print("[!] Вы не ввели имя бэкапа")
-        print(r"[!] Загрука бэкапа {0}...".format(name.replace(".db") + ".db"))
+        print(r"[!] Загрука бэкапа {0}...".format(name.replace(".db", '') + ".db"))
         try:
             with open(name.replace(".db") + ".db", "r", encoding="utf-8") as data:
                 self.db = json.loads(data.read())
                 return print("[!] Успешная загрузка бэкапа данных!")
         except:
-            name = name.replace(".db") + ".db"
-            with open(r".\backups\\"+(name.replace(r".\backups\\")), "r", encoding="utf-8") as data:
+            name = name.replace(".db", '') + ".db"
+            with open(r".\backups\\"+(name.replace(r".\backups\\", '')), "r", encoding="utf-8") as data:
                     self.db = json.loads(data.read())
                     return print("[!] Успешная загрузка бэкапа данных!")
             try:
-                with open(r".\backups\\"+(name.replace(".db") + ".db").replace(r".\backups\\"), "r", encoding="utf-8") as data:
+                with open(r".\backups\\"+(name.replace(".db", '') + ".db").replace(r".\backups\\", ''), "r", encoding="utf-8") as data:
                     self.db = json.loads(data.read())
                     print("[!] Успешная загрузка бэкапа данных!")
             except:
@@ -67,7 +67,6 @@ class Base(object):
 
     def __init__(self):
         print("[!] База подключена, бэкап базы данных...")
-        print("backup_123123123".replace(r"./backups/"))
         self.backup()
 
     def __call__(self, c_id, sent, ans=""):
