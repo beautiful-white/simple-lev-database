@@ -28,6 +28,30 @@ class Base(object):
             self.last_backup = nm
             print(f"    {nm}")if self.debug else 1
 
+
+    def update(self, name=""):
+        if not name: return print("[!] Вы не ввели имя бэкапа")
+        print(r"[!] Загрука апдейта {0}...".format(name.replace(".db", '') + ".db"))
+        try:
+            with open(name.replace(".db") + ".db", "r", encoding="utf-8") as data:
+                m = json.loads(data.read())
+                for i in (set(m.keys()) & set(self.db.keys())):
+                    self.db[i] = m[i]
+                return print("[!] Успешная загрузка апдейта для данных!")
+        except:
+            name = name.replace(".db", '') + ".db"
+            try:
+                with open(r".\backups\\"+(name.replace(r".\backups\\", '')), "r", encoding="utf-8") as data:
+                    m = json.loads(data.read())
+                    for i in (set(m.keys()) & set(self.db.keys())):
+                        for j in (set(m[i].keys()) & set(self.db[i].keys())):
+                            self.db[i][j] = m[i][j]
+                    return print("[!] Успешная загрузка апдейта для данных!")
+            except:
+                return print('''[!] Файл апдейта с таким именем не найден в директории БД!''')
+
+
+
     def load(self, name=""):
         if not name: return print("[!] Вы не ввели имя бэкапа")
         print(r"[!] Загрука бэкапа {0}...".format(name.replace(".db", '') + ".db"))
@@ -37,13 +61,10 @@ class Base(object):
                 return print("[!] Успешная загрузка бэкапа данных!")
         except:
             name = name.replace(".db", '') + ".db"
-            with open(r".\backups\\"+(name.replace(r".\backups\\", '')), "r", encoding="utf-8") as data:
+            try:
+                with open(r".\backups\\"+(name.replace(r".\backups\\", '')), "r", encoding="utf-8") as data:
                     self.db = json.loads(data.read())
                     return print("[!] Успешная загрузка бэкапа данных!")
-            try:
-                with open(r".\backups\\"+(name.replace(".db", '') + ".db").replace(r".\backups\\", ''), "r", encoding="utf-8") as data:
-                    self.db = json.loads(data.read())
-                    print("[!] Успешная загрузка бэкапа данных!")
             except:
                 return print('''[!] Бэкап с таким именем не найден в директории БД!''')
 
