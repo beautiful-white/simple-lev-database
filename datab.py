@@ -16,7 +16,7 @@ class Base(object):
 
     last_backup = None
 
-    debug = True
+    debug = False
     
     def backup(self):
         if not os.path.exists("backups"):
@@ -77,6 +77,14 @@ class Base(object):
             except:
                 return print('''[!] Бэкап с таким именем не найден в директории БД!''')
 
+    def last_log(self, save=False):
+        if not save:
+            try:
+                with open("config.ini", "r") as d:
+                    self.last_backup = d.read()
+        else:
+            with open("config.ini", "w") as d:
+                d.write(self.last_backup)
     
     def print_percent(self, l):
         print("[!] На запрос было отвечено:")
@@ -89,8 +97,10 @@ class Base(object):
     def __init__(self):
         print("[!] База подключена, бэкап базы данных...")
         self.backup()
+        last_log()
 
     def __call__(self, c_id, sent, ans=""):
+        c_id = str(c_id)
         if type(self.db.get(c_id)) != dict:
             self.db[c_id] = dict()
         sent = sent.lower()
