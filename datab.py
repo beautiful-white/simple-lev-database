@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #!/usr/bin/env python3
 
-# owner github: https://github.com/beautiful-white
+# owner: https://github.com/beautiful-white
 # GPL-2.0 License
 # 2022 © Beautiful-White
 
@@ -26,19 +26,20 @@ class Base(object):
             bk.write(json.dumps(self.db, ensure_ascii=False))
             print("[!] Успешный бэкап базы данных!")
             self.last_backup = nm
+            self.last_log(save=True)
             print(f"    {nm}")if self.debug else 1
 
 
     def update(self, name=""):
         if not name: return print("[!] Вы не ввели имя бэкапа")
-        print(r"[!] Загрука апдейта {0}...".format(name.replace(".db", '') + ".db"))
+        print(r"[!] Загрука апдейта {0}".format(name.replace(".db", '') + ".db"))
         try:
-            with open(name.replace(".db") + ".db", "r", encoding="utf-8") as data:
+            with open(name.replace(".db", '') + ".db", "r", encoding="utf-8") as data:
                 m = json.loads(data.read())
                 for i in (set(m.keys()) & set(self.db.keys())):
                     self.db[i] = m[i]
                 return print("[!] Успешная загрузка апдейта для данных!")
-        except:
+        except FileNotFoundError:
             name = name.replace(".db", '') + ".db"
             try:
                 with open(r".\backups\\"+(name.replace(r".\backups\\", '')), "r", encoding="utf-8") as data:
@@ -47,34 +48,23 @@ class Base(object):
                         for j in (set(m[i].keys()) & set(self.db[i].keys())):
                             self.db[i][j] = m[i][j]
                     return print("[!] Успешная загрузка апдейта для данных!")
-            except:
+            except FileNotFoundError:
                 return print('''[!] Файл апдейта с таким именем не найден в директории БД!''')
-
-
 
     def load(self, name=""):
         if not name: return print("[!] Вы не ввели имя бэкапа")
-        print(r"[!] Загрука бэкапа {0}...".format(name.replace(".db", '') + ".db"))
+        print(r"[!] Загрука бэкапа {0}".format(name.replace(".db", '') + ".db"))
         try:
-            with open(name.replace(".db") + ".db", "r", encoding="utf-8") as data:
+            with open(name.replace(".db", '') + ".db", "r", encoding="utf-8") as data:
                 self.db = json.loads(data.read())
                 return print("[!] Успешная загрузка бэкапа данных!")
-        except:
+        except FileNotFoundError:
             name = name.replace(".db", '') + ".db"
             try:
                 with open(r".\backups\\"+(name.replace(r".\backups\\", '')), "r", encoding="utf-8") as data:
                     self.db = json.loads(data.read())
                     return print("[!] Успешная загрузка бэкапа данных!")
-            except:
-                return print('''[!] Бэкап с таким именем не найден в директории БД!''')
-
-    def loadLast(self):
-        if self.last_backup:
-            try:
-                with open(self.last_backup, "r", encoding="utf-8") as data:
-                    self.db = json.loads(data.read())
-                    print("[!] Успешная загрузка последнего бэкапа данных!")
-            except:
+            except FileNotFoundError:
                 return print('''[!] Бэкап с таким именем не найден в директории БД!''')
 
     def last_log(self, save=False):
@@ -82,6 +72,9 @@ class Base(object):
             try:
                 with open("config.ini", "r") as d:
                     self.last_backup = d.read()
+                    return self.last_backup
+            except FileNotFoundError:
+                return
         else:
             with open("config.ini", "w") as d:
                 d.write(self.last_backup)
@@ -95,9 +88,8 @@ class Base(object):
             print("[!] Совпадений не найдено!") 
 
     def __init__(self):
-        print("[!] База подключена, бэкап базы данных...")
-        self.backup()
-        last_log()
+        print("[!] База данных подключена")
+        self.load(self.last_log())
 
     def __call__(self, c_id, sent, ans=""):
         c_id = str(c_id)
