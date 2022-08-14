@@ -51,7 +51,7 @@ class Base(object):
             except FileNotFoundError:
                 return print('''[!] Файл апдейта с таким именем не найден в директории БД!''')
 
-    def load(self, name=""):
+    def load(self, name=self.last_backup):
         if not name: return print("[!] Вы не ввели имя бэкапа")
         print(r"[!] Загрука бэкапа {0}".format(name.replace(".db", '') + ".db"))
         try:
@@ -74,7 +74,7 @@ class Base(object):
                     self.last_backup = d.read()
                     return self.last_backup
             except FileNotFoundError:
-                return
+                return False
         else:
             with open("config.ini", "w") as d:
                 d.write(self.last_backup)
