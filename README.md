@@ -1,4 +1,4 @@
-## [Русская версия](https://github.com/beautiful-white/simple-lev-database/README.md#простая-база-данных-с-встроенным-поиском-похожих-вопросов-основанным-на-теории-растояний-левенштайна---)
+## [На русском](https://github.com/beautiful-white/simple-lev-database/blob/main/README.md#простая-база-данных-с-встроенным-поиском-похожих-вопросов-основанным-на-теории-растояний-левенштайна---)
 
 # Simple Levenshtein database <br> ![build passing](https://img.shields.io/badge/build-passing-brightgreen) ![license](https://img.shields.io/github/license/beautiful-white/simple-lev-database)
 *This database has created for bot (search similar questions/answers (calls)) and simple saving data in JSON files*
